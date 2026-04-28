@@ -7,3 +7,6 @@
 4. `cd` naar de geextracte folder.
 5. In de folder, typ `cargo run`
 6. Laat het builden, en je bent binnen!
+
+Disclaimer:
+De planeet banen bestaan niet echt (helaas). - Ocelot
