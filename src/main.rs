@@ -13,202 +13,65 @@ const BASE_SCALE: f64 = 4.0;
 const CHAR_ASPECT: f64 = 0.5;
 
 struct PlaneetDef {
-    naam: &'static str,
-    grote_as_au: f64,
+    naam:           &'static str,
+    grote_as_au:    f64,
     excentriciteit: f64,
-    omloop_dagen: f64,
-    straal_km: f64,
-    glyph: char,
-    kleur: Color,
-    begin_hoek: f64,
+    omloop_dagen:   f64,
+    straal_km:      f64,
+    glyph:          char,
+    kleur:          Color,
+    begin_hoek:     f64,
 }
 
-//Define planeten, met alle info.
 static PLANETEN: &[PlaneetDef] = &[
-    PlaneetDef {
-        naam: "Mercurius",
-        grote_as_au: 0.387,
-        excentriciteit: 0.206,
-        omloop_dagen: 87.97,
-        straal_km: 2_439.0,
-        glyph: '●',
-        kleur: Color::Rgb {
-            r: 160,
-            g: 140,
-            b: 130,
-        },
-        begin_hoek: 0.8,
-    },
-    PlaneetDef {
-        naam: "Venus",
-        grote_as_au: 0.723,
-        excentriciteit: 0.007,
-        omloop_dagen: 224.70,
-        straal_km: 6_052.0,
-        glyph: '●',
-        kleur: Color::Rgb {
-            r: 230,
-            g: 210,
-            b: 130,
-        },
-        begin_hoek: 2.1,
-    },
-    PlaneetDef {
-        naam: "Aarde",
-        grote_as_au: 1.000,
-        excentriciteit: 0.017,
-        omloop_dagen: 365.25,
-        straal_km: 6_371.0,
-        glyph: '●',
-        kleur: Color::Rgb {
-            r: 80,
-            g: 160,
-            b: 240,
-        },
-        begin_hoek: 4.0,
-    },
-    PlaneetDef {
-        naam: "Mars",
-        grote_as_au: 1.524,
-        excentriciteit: 0.093,
-        omloop_dagen: 686.97,
-        straal_km: 3_390.0,
-        glyph: '●',
-        kleur: Color::Rgb {
-            r: 220,
-            g: 100,
-            b: 60,
-        },
-        begin_hoek: 1.0,
-    },
-    PlaneetDef {
-        naam: "Jupiter",
-        grote_as_au: 5.203,
-        excentriciteit: 0.049,
-        omloop_dagen: 4_332.59,
-        straal_km: 71_492.0,
-        glyph: '◉',
-        kleur: Color::Rgb {
-            r: 210,
-            g: 175,
-            b: 130,
-        },
-        begin_hoek: 3.5,
-    },
-    PlaneetDef {
-        naam: "Saturnus",
-        grote_as_au: 9.537,
-        excentriciteit: 0.057,
-        omloop_dagen: 10_759.22,
-        straal_km: 60_268.0,
-        glyph: '◎',
-        kleur: Color::Rgb {
-            r: 220,
-            g: 205,
-            b: 155,
-        },
-        begin_hoek: 5.2,
-    },
-    PlaneetDef {
-        naam: "Uranus",
-        grote_as_au: 19.191,
-        excentriciteit: 0.046,
-        omloop_dagen: 30_688.50,
-        straal_km: 25_559.0,
-        glyph: '○',
-        kleur: Color::Rgb {
-            r: 150,
-            g: 230,
-            b: 235,
-        },
-        begin_hoek: 0.3,
-    },
-    PlaneetDef {
-        naam: "Neptunus",
-        grote_as_au: 30.069,
-        excentriciteit: 0.010,
-        omloop_dagen: 60_182.00,
-        straal_km: 24_764.0,
-        glyph: '○',
-        kleur: Color::Rgb {
-            r: 80,
-            g: 120,
-            b: 230,
-        },
-        begin_hoek: 2.8,
-    },
+    PlaneetDef { naam:"Mercurius", grote_as_au:0.387,  excentriciteit:0.206, omloop_dagen:87.97,      straal_km:2_439.0,  glyph:'*', kleur:Color::Rgb{r:160,g:140,b:130}, begin_hoek:0.8 },
+    PlaneetDef { naam:"Venus",     grote_as_au:0.723,  excentriciteit:0.007, omloop_dagen:224.70,     straal_km:6_052.0,  glyph:'*', kleur:Color::Rgb{r:230,g:210,b:130}, begin_hoek:2.1 },
+    PlaneetDef { naam:"Aarde",     grote_as_au:1.000,  excentriciteit:0.017, omloop_dagen:365.25,     straal_km:6_371.0,  glyph:'*', kleur:Color::Rgb{r:80,g:160,b:240},  begin_hoek:4.0 },
+    PlaneetDef { naam:"Mars",      grote_as_au:1.524,  excentriciteit:0.093, omloop_dagen:686.97,     straal_km:3_390.0,  glyph:'*', kleur:Color::Rgb{r:220,g:100,b:60},  begin_hoek:1.0 },
+    PlaneetDef { naam:"Jupiter",   grote_as_au:5.203,  excentriciteit:0.049, omloop_dagen:4_332.59,   straal_km:71_492.0, glyph:'O', kleur:Color::Rgb{r:210,g:175,b:130}, begin_hoek:3.5 },
+    PlaneetDef { naam:"Saturnus",  grote_as_au:9.537,  excentriciteit:0.057, omloop_dagen:10_759.22,  straal_km:60_268.0, glyph:'O', kleur:Color::Rgb{r:220,g:205,b:155}, begin_hoek:5.2 },
+    PlaneetDef { naam:"Uranus",    grote_as_au:19.191, excentriciteit:0.046, omloop_dagen:30_688.50,  straal_km:25_559.0, glyph:'o', kleur:Color::Rgb{r:150,g:230,b:235}, begin_hoek:0.3 },
+    PlaneetDef { naam:"Neptunus",  grote_as_au:30.069, excentriciteit:0.010, omloop_dagen:60_182.00,  straal_km:24_764.0, glyph:'o', kleur:Color::Rgb{r:80,g:120,b:230},  begin_hoek:2.8 },
 ];
 
 const ZON_STRAAL_KM: f64 = 696_000.0;
 
 // Dubbele buffer
 #[derive(Clone, PartialEq)]
-struct Cel {
-    teken: char,
-    fg: Color,
-    vet: bool,
-}
+struct Cel { teken: char, fg: Color, vet: bool }
 impl Default for Cel {
-    fn default() -> Self {
-        Cel {
-            teken: ' ',
-            fg: Color::Reset,
-            vet: false,
-        }
-    }
+    fn default() -> Self { Cel { teken: ' ', fg: Color::Reset, vet: false } }
 }
 
 struct Scherm {
     breedte: usize,
-    hoogte: usize,
-    voor: Vec<Cel>,
-    achter: Vec<Cel>,
+    hoogte:  usize,
+    voor:    Vec<Cel>,
+    achter:  Vec<Cel>,
 }
 
 impl Scherm {
     fn nieuw(w: u16, h: u16) -> Self {
         let n = w as usize * h as usize;
         Scherm {
-            breedte: w as usize,
-            hoogte: h as usize,
-            voor: vec![
-                Cel {
-                    teken: '~',
-                    ..Default::default()
-                };
-                n
-            ],
+            breedte: w as usize, hoogte: h as usize,
+            voor:   vec![Cel { teken: '~', ..Default::default() }; n],
             achter: vec![Default::default(); n],
         }
     }
     fn resize(&mut self, w: u16, h: u16) {
-        self.breedte = w as usize;
-        self.hoogte = h as usize;
+        self.breedte = w as usize; self.hoogte = h as usize;
         let n = self.breedte * self.hoogte;
-        self.voor = vec![
-            Cel {
-                teken: '~',
-                ..Default::default()
-            };
-            n
-        ];
+        self.voor   = vec![Cel { teken: '~', ..Default::default() }; n];
         self.achter = vec![Default::default(); n];
     }
-    fn wis(&mut self) {
-        for c in &mut self.achter {
-            *c = Default::default();
-        }
-    }
+    fn wis(&mut self) { for c in &mut self.achter { *c = Default::default(); } }
 
     #[inline]
     fn zet(&mut self, x: i64, y: i64, teken: char, fg: Color, vet: bool) {
-        if x < 0 || y < 0 {
-            return;
-        }
+        if x < 0 || y < 0 { return; }
         let (ux, uy) = (x as usize, y as usize);
-        if ux >= self.breedte || uy >= self.hoogte {
-            return;
-        }
+        if ux >= self.breedte || uy >= self.hoogte { return; }
         self.achter[uy * self.breedte + ux] = Cel { teken, fg, vet };
     }
 
@@ -216,9 +79,7 @@ impl Scherm {
         let mut huidig_vet = false;
         for idx in 0..self.voor.len() {
             let a = &self.achter[idx];
-            if a == &self.voor[idx] {
-                continue;
-            }
+            if a == &self.voor[idx] { continue; }
             let x = (idx % self.breedte) as u16;
             let y = (idx / self.breedte) as u16;
             queue!(out, cursor::MoveTo(x, y))?;
@@ -232,23 +93,19 @@ impl Scherm {
             queue!(out, SetForegroundColor(a.fg), Print(a.teken))?;
             self.voor[idx] = a.clone();
         }
-        if huidig_vet {
-            queue!(out, SetAttribute(Attribute::Reset))?;
-        }
+        if huidig_vet { queue!(out, SetAttribute(Attribute::Reset))?; }
         queue!(out, ResetColor)?;
         out.flush()
     }
 }
 
-// Wiskunde (gemaakt door mijn vriend Chet Djipiti uit Silicon Valley)
+// Wiskunde
 fn excentrieke_anomalie(ma: f64, e: f64) -> f64 {
     let mut ea = ma;
     for _ in 0..60 {
         let d = (ma - (ea - e * ea.sin())) / (1.0 - e * ea.cos());
         ea += d;
-        if d.abs() < 1e-11 {
-            break;
-        }
+        if d.abs() < 1e-11 { break; }
     }
     ea
 }
@@ -258,30 +115,29 @@ fn planeet_3d(def: &PlaneetDef, sim_dagen: f64) -> (f64, f64, f64) {
     let mm = 2.0 * PI / def.omloop_dagen;
     let ma = (mm * sim_dagen + def.begin_hoek).rem_euclid(2.0 * PI);
     let ea = excentrieke_anomalie(ma, def.excentriciteit);
-    let ta = 2.0
-        * (((1.0 + def.excentriciteit) / (1.0 - def.excentriciteit)).sqrt() * (ea / 2.0).tan())
-            .atan();
+    // atan2 vermijdt de tan-singulariteit bij ea=PI
+    let ta = 2.0 * f64::atan2(
+        ((1.0 + def.excentriciteit).sqrt()) * (ea / 2.0).sin(),
+        ((1.0 - def.excentriciteit).sqrt()) * (ea / 2.0).cos(),
+    );
     let r = def.grote_as_au * (1.0 - def.excentriciteit.powi(2))
-        / (1.0 + def.excentriciteit * ta.cos());
+            / (1.0 + def.excentriciteit * ta.cos());
     (r * ta.cos(), r * ta.sin(), 0.0)
 }
 
 fn projecteer(
-    wx: f64,
-    wy: f64,
-    wz: f64,
-    yaw: f64,
-    pitch: f64,
+    wx: f64, wy: f64, wz: f64,
+    yaw: f64, pitch: f64,
     schaal: f64,
-    scroll_x: f64,
-    scroll_y: f64,
-    cx: f64,
-    cy: f64,
+    scroll_x: f64, scroll_y: f64,
+    cx: f64, cy: f64,
 ) -> (f64, f64, f64) {
+    // yaw om de Z-as
     let (sy, cy2) = yaw.sin_cos();
-    let rx1 = wx * cy2 + wy * sy;
-    let ry1 = -wx * sy + wy * cy2;
-    let rz1 = wz;
+    let rx1 =  wx * cy2 + wy * sy;
+    let ry1 = -wx * sy  + wy * cy2;
+    let rz1 =  wz;
+    // pitch om de X-as
     let (sp, cp) = pitch.sin_cos();
     let rx2 = rx1;
     let ry2 = ry1 * cp - rz1 * sp;
@@ -294,289 +150,174 @@ fn projecteer(
 }
 
 fn straal_cellen(straal_km: f64, schaal: f64) -> i64 {
-    let basis =
-        ((straal_km.ln() - 7000_f64.ln()) / (ZON_STRAAL_KM.ln() - 7000_f64.ln()) * 4.0).max(0.0);
+    let basis = ((straal_km.ln() - 7000_f64.ln())
+                 / (ZON_STRAAL_KM.ln() - 7000_f64.ln()) * 4.0).max(0.0);
     ((basis * (schaal / BASE_SCALE).sqrt()).round() as i64).max(0)
 }
 
-// Teken helpers
+// tekenhulpen
 fn teken_cirkel(
     scherm: &mut Scherm,
-    cx: f64,
-    cy: f64,
-    radius: i64,
-    glyph: char,
-    kleur: Color,
-    vet: bool,
-    usable_h: i64,
+    cx: f64, cy: f64, radius: i64,
+    glyph: char, kleur: Color, vet: bool, usable_h: i64,
 ) {
     let r = radius.max(0);
-    if r == 0 {
-        scherm.zet(cx as i64, cy as i64, glyph, kleur, vet);
-        return;
-    }
+    if r == 0 { scherm.zet(cx as i64, cy as i64, glyph, kleur, vet); return; }
     for dy in -r..=r {
         for dx in -(r * 2)..=(r * 2) {
             if (dx as f64 / 2.0).powi(2) + (dy as f64).powi(2) <= (r as f64 + 0.5).powi(2) {
                 let sy = cy as i64 + dy;
-                if sy < usable_h {
-                    scherm.zet(cx as i64 + dx, sy, glyph, kleur, vet);
-                }
+                if sy < usable_h { scherm.zet(cx as i64 + dx, sy, glyph, kleur, vet); }
             }
         }
     }
 }
 
 fn teken_baan(
-    scherm: &mut Scherm,
-    def: &PlaneetDef,
-    yaw: f64,
-    pitch: f64,
-    schaal: f64,
-    scroll_x: f64,
-    scroll_y: f64,
-    cx: f64,
-    cy: f64,
-    usable_h: i64,
+    scherm: &mut Scherm, def: &PlaneetDef,
+    yaw: f64, pitch: f64, schaal: f64,
+    scroll_x: f64, scroll_y: f64,
+    cx: f64, cy: f64, usable_h: i64,
+    zon_sx: f64, zon_sy: f64, zon_r: i64,
 ) {
     use std::f64::consts::PI;
-    let a = def.grote_as_au;
-    let b = a * (1.0 - def.excentriciteit.powi(2)).sqrt();
+    let a  = def.grote_as_au;
+    let b  = a * (1.0 - def.excentriciteit.powi(2)).sqrt();
     let fc = a * def.excentriciteit;
     let stappen = ((a * schaal * 2.0 * PI) as usize).clamp(120, 2000);
     let skip = (stappen / 600 + 1).max(1);
+    // straal van het zondisc op scherm
+    let skip_r = (zon_r + 1) as f64;
     for i in (0..stappen).step_by(skip) {
         let theta = 2.0 * PI * i as f64 / stappen as f64;
         let (sx, sy, _) = projecteer(
-            a * theta.cos() - fc,
-            b * theta.sin(),
-            0.0,
-            yaw,
-            pitch,
-            schaal,
-            scroll_x,
-            scroll_y,
-            cx,
-            cy,
+            a * theta.cos() - fc, b * theta.sin(), 0.0,
+            yaw, pitch, schaal, scroll_x, scroll_y, cx, cy,
         );
         if sy >= 0.0 && sy < usable_h as f64 {
-            scherm.zet(
-                sx as i64,
-                sy as i64,
-                '·',
-                Color::Rgb {
-                    r: 40,
-                    g: 42,
-                    b: 58,
-                },
-                false,
-            );
+            // sla dots over die binnen de zon vallen
+            let dx = (sx - zon_sx) * 0.5;
+            let dy = sy - zon_sy;
+            if dx * dx + dy * dy < skip_r * skip_r { continue; }
+            scherm.zet(sx as i64, sy as i64, '.', Color::Rgb { r: 140, g: 140, b: 140 }, false);
         }
     }
 }
 
 // Sterren
-struct Ster {
-    x: f64,
-    y: f64,
-    soort: u8,
-}
+struct Ster { x: f64, y: f64, helderheid: u8 }
 
 fn genereer_sterren(n: usize) -> Vec<Ster> {
-    (0..n)
-        .map(|i| {
-            let hx = (i.wrapping_mul(2654435761).wrapping_add(1013904223)) as u64;
-            let hy = (i.wrapping_mul(1664525).wrapping_add(22695477)) as u64;
-            Ster {
-                x: ((hx & 0xFFFF) as f64 / 65535.0) * 4000.0 - 2000.0,
-                y: ((hy & 0xFFFF) as f64 / 65535.0) * 4000.0 - 2000.0,
-                soort: (i % 7) as u8,
-            }
-        })
-        .collect()
+    (0..n).map(|i| {
+        let hx = i.wrapping_mul(2654435761).wrapping_add(1013904223) as u64;
+        let hy = i.wrapping_mul(1664525).wrapping_add(22695477) as u64;
+        let hb = i.wrapping_mul(134775813).wrapping_add(1) as u64;
+        Ster {
+            x: ((hx & 0xFFFF) as f64 / 65535.0) * 4000.0 - 2000.0,
+            y: ((hy & 0xFFFF) as f64 / 65535.0) * 4000.0 - 2000.0,
+            helderheid: match hb % 4 { 0 => 65, 1 => 50, 2 => 40, _ => 30 },
+        }
+    }).collect()
 }
 
 fn teken_sterren(
-    scherm: &mut Scherm,
-    sterren: &[Ster],
-    scroll_x: f64,
-    scroll_y: f64,
-    yaw: f64,
-    pitch: f64,
-    cx: f64,
-    cy: f64,
-    usable_h: i64,
-    tijd: f64,
+    scherm: &mut Scherm, sterren: &[Ster],
+    scroll_x: f64, scroll_y: f64,
+    yaw: f64, pitch: f64,
+    cx: f64, cy: f64, usable_h: i64,
 ) {
     let tw = scherm.breedte as f64;
     let th = usable_h as f64;
-    for s in sterren {
+    for s in sterren.iter().step_by(3) {
         let (px, py, _) = projecteer(
-            s.x,
-            s.y,
-            0.0,
-            yaw * 0.08,
-            pitch * 0.08,
-            1.0,
-            scroll_x * 0.04,
-            scroll_y * 0.04,
-            cx,
-            cy,
+            s.x, s.y, 0.0,
+            yaw * 0.06, pitch * 0.06, 1.0,
+            scroll_x * 0.03, scroll_y * 0.03,
+            cx, cy,
         );
-        let x = px.rem_euclid(tw * 1.5) - tw * 0.25;
-        let y = py.rem_euclid(th * 1.5) - th * 0.25;
-        if x < 0.0 || y < 0.0 || x >= tw || y >= th {
-            continue;
-        }
-        let tw2 = ((tijd * 3.0 + s.x * 0.1 + s.y * 0.07).sin() * 0.5 + 0.5) as f32;
-        let (ch, kleur) = match s.soort {
-            0 => {
-                let b = (180.0 + tw2 * 75.0) as u8;
-                ('✦', Color::Rgb { r: b, g: b, b: 255 })
-            }
-            1 => {
-                let b = (200.0 + tw2 * 55.0) as u8;
-                (
-                    '+',
-                    Color::Rgb {
-                        r: 255,
-                        g: b,
-                        b: (b as u16 * 3 / 4) as u8,
-                    },
-                )
-            }
-            2 => {
-                let b = (160.0 + tw2 * 60.0) as u8;
-                ('·', Color::Rgb { r: b, g: 255, b: b })
-            }
-            3 => {
-                let b = (120.0 + tw2 * 80.0) as u8;
-                ('·', Color::Rgb { r: b, g: b, b: b })
-            }
-            4 => (
-                '★',
-                Color::Rgb {
-                    r: 255,
-                    g: 240,
-                    b: 200,
-                },
-            ),
-            5 => {
-                let b = (100.0 + tw2 * 80.0) as u8;
-                (
-                    '░',
-                    Color::Rgb {
-                        r: b / 2,
-                        g: b / 3,
-                        b: b,
-                    },
-                )
-            }
-            _ => {
-                let b = (90.0 + tw2 * 50.0) as u8;
-                ('·', Color::Rgb { r: b, g: b, b: b })
-            }
-        };
-        scherm.zet(x as i64, y as i64, ch, kleur, s.soort == 4);
+        let x = px.rem_euclid(tw * 1.4) - tw * 0.2;
+        let y = py.rem_euclid(th * 1.4) - th * 0.2;
+        if x < 0.0 || y < 0.0 || x >= tw || y >= th { continue; }
+        let b = s.helderheid;
+        scherm.zet(x as i64, y as i64, '.', Color::Rgb { r: b, g: b, b }, false);
     }
 }
 
-// Applicatie
+// application schtuff 
 struct App {
-    scherm: Scherm,
-    scroll_x: f64,
-    scroll_y: f64,
-    zoom: f64,
-    yaw: f64,
-    pitch: f64,
-    snelheid: f64,
-    last_tick: Instant,
-    sim_dagen: f64,
-    toon_help: bool,
-    gepauzeerd: bool,
-    sterren: Vec<Ster>,
-    tijd: f64,
+    scherm:     Scherm,
+    scroll_x:   f64,
+    scroll_y:   f64,
+    zoom:       f64,
+    yaw:        f64,
+    pitch:      f64,
+    snelheid:   f64,
+    last_tick:  Instant,
+    sim_dagen:  f64,
+    toon_help:   bool,
+    toon_legenda: bool,
+    gepauzeerd:  bool,
+    sterren:    Vec<Ster>,
 }
 
 impl App {
     fn nieuw() -> io::Result<Self> {
         let (w, h) = terminal::size()?;
         Ok(App {
-            scherm: Scherm::nieuw(w, h),
-            scroll_x: 0.0,
-            scroll_y: 0.0,
-            zoom: 1.0,
-            yaw: 0.0,
-            pitch: 0.0,
-            snelheid: 1.0,
-            last_tick: Instant::now(),
-            sim_dagen: 0.0,
-            toon_help: true,
-            gepauzeerd: false,
-            sterren: genereer_sterren(800),
-            tijd: 0.0,
+            scherm:     Scherm::nieuw(w, h),
+            scroll_x:   0.0, scroll_y: 0.0,
+            zoom:       1.0, yaw: 0.0, pitch: 0.0,
+            snelheid:   1.0,
+            last_tick:  Instant::now(),
+            sim_dagen:  0.0,
+            toon_help:   true,
+            toon_legenda: true,
+            gepauzeerd:  false,
+            sterren:    genereer_sterren(900),
         })
     }
 
     fn update(&mut self) {
-        let dt = self.last_tick.elapsed().as_secs_f64();
+        let dt = self.last_tick.elapsed().as_secs_f64().min(0.1);
         self.last_tick = Instant::now();
-        self.tijd += dt;
-        if !self.gepauzeerd {
-            self.sim_dagen += dt * self.snelheid;
-        }
-        self.pitch = self.pitch.clamp(
-            -std::f64::consts::FRAC_PI_2 + 0.05,
-            std::f64::consts::FRAC_PI_2 - 0.05,
-        );
+        if !self.gepauzeerd { self.sim_dagen += dt * self.snelheid; }
     }
 
-    // Beweging per keypress ipv held.
     fn toets(&mut self, key: KeyEvent) -> bool {
-        // Stap-grootten afhankelijk van huidige zoom
-        let schaal = BASE_SCALE * self.zoom;
-        let pan_stap = schaal * 0.4;
-        let rot_stap = 0.08_f64; // radialen per druk
-        let zoom_factor = 1.15_f64;
+        let schaal       = BASE_SCALE * self.zoom;
+        let pan_stap     = schaal * 0.4;
+        let rot_stap     = 0.05_f64;
+        let zoom_factor  = 1.15_f64;
 
         match key.code {
             KeyCode::Char('q') | KeyCode::Char('Q') => return false,
             KeyCode::Char('c') if key.modifiers.contains(KeyModifiers::CONTROL) => return false,
 
-            // Pan — WASD
             KeyCode::Char('a') | KeyCode::Char('A') => self.scroll_x -= pan_stap,
             KeyCode::Char('d') | KeyCode::Char('D') => self.scroll_x += pan_stap,
             KeyCode::Char('w') | KeyCode::Char('W') => self.scroll_y -= pan_stap * CHAR_ASPECT,
             KeyCode::Char('s') | KeyCode::Char('S') => self.scroll_y += pan_stap * CHAR_ASPECT,
 
-            // Draaien / kantelen — pijltjes
-            KeyCode::Left => self.yaw -= rot_stap,
-            KeyCode::Right => self.yaw += rot_stap,
-            KeyCode::Up => self.pitch -= rot_stap,
-            KeyCode::Down => self.pitch += rot_stap,
+            // pijltjes draaien — pitch vrij, geen clamp
+            KeyCode::Left  => self.yaw   = (self.yaw   - rot_stap).rem_euclid(std::f64::consts::TAU),
+            KeyCode::Right => self.yaw   = (self.yaw   + rot_stap).rem_euclid(std::f64::consts::TAU),
+            KeyCode::Up    => self.pitch = (self.pitch - rot_stap).rem_euclid(std::f64::consts::TAU),
+            KeyCode::Down  => self.pitch = (self.pitch + rot_stap).rem_euclid(std::f64::consts::TAU),
 
-            // Zoom — + / -
-            KeyCode::Char('+') | KeyCode::Char('=') => {
-                self.zoom = (self.zoom * zoom_factor).min(50.0)
-            }
-            KeyCode::Char('-') | KeyCode::Char('_') => {
-                self.zoom = (self.zoom / zoom_factor).max(0.05)
-            }
+            KeyCode::Char('+') | KeyCode::Char('=') => self.zoom = (self.zoom * zoom_factor).min(50.0),
+            KeyCode::Char('-') | KeyCode::Char('_') => self.zoom = (self.zoom / zoom_factor).max(0.05),
 
-            // Snelheid
             KeyCode::Char('1') => self.snelheid = 1.0,
             KeyCode::Char('2') => self.snelheid = 365.25,
             KeyCode::Char('3') => self.snelheid = 3652.5,
             KeyCode::Char('4') => self.snelheid = 36525.0,
 
-            // Overig
             KeyCode::Char(' ') => self.gepauzeerd = !self.gepauzeerd,
             KeyCode::Char('h') | KeyCode::Char('H') => self.toon_help = !self.toon_help,
+            KeyCode::Char('l') | KeyCode::Char('L') => self.toon_legenda = !self.toon_legenda,
             KeyCode::Char('0') => {
-                self.scroll_x = 0.0;
-                self.scroll_y = 0.0;
-                self.yaw = 0.0;
-                self.pitch = 0.0;
+                self.scroll_x = 0.0; self.scroll_y = 0.0;
+                self.yaw = 0.0;      self.pitch = 0.0;
                 self.zoom = 1.0;
             }
             _ => {}
@@ -586,8 +327,8 @@ impl App {
 
     fn render<W: Write>(&mut self, out: &mut W) -> io::Result<()> {
         let ui_rijen = 4usize;
-        let w = self.scherm.breedte;
-        let h = self.scherm.hoogte;
+        let w  = self.scherm.breedte;
+        let h  = self.scherm.hoogte;
         let uh = (h.saturating_sub(ui_rijen)) as i64;
         let sc = BASE_SCALE * self.zoom;
         let cx = w as f64 / 2.0;
@@ -595,287 +336,161 @@ impl App {
 
         self.scherm.wis();
 
-        teken_sterren(
-            &mut self.scherm,
-            &self.sterren,
-            self.scroll_x,
-            self.scroll_y,
-            self.yaw,
-            self.pitch,
-            cx,
-            cy,
-            uh,
-            self.tijd,
-        );
+        teken_sterren(&mut self.scherm, &self.sterren,
+                      self.scroll_x, self.scroll_y,
+                      self.yaw, self.pitch, cx, cy, uh);
+
+        let zon_r = straal_cellen(ZON_STRAAL_KM, sc).max(2);
+        let (zx, zy, _) = projecteer(0.0, 0.0, 0.0,
+                                      self.yaw, self.pitch, sc,
+                                      self.scroll_x, self.scroll_y, cx, cy);
 
         for def in PLANETEN {
-            teken_baan(
-                &mut self.scherm,
-                def,
-                self.yaw,
-                self.pitch,
-                sc,
-                self.scroll_x,
-                self.scroll_y,
-                cx,
-                cy,
-                uh,
-            );
+            teken_baan(&mut self.scherm, def,
+                       self.yaw, self.pitch, sc,
+                       self.scroll_x, self.scroll_y, cx, cy, uh,
+                       zx, zy, zon_r);
         }
 
-        // Zon
-        let zon_r = straal_cellen(ZON_STRAAL_KM, sc).max(2);
-        let (zx, zy, _) = projecteer(
-            0.0,
-            0.0,
-            0.0,
-            self.yaw,
-            self.pitch,
-            sc,
-            self.scroll_x,
-            self.scroll_y,
-            cx,
-            cy,
-        );
-        for ar in (zon_r + 1)..=(zon_r + 3) {
-            let a = (255u16.saturating_sub((ar - zon_r) as u16 * 60)).max(60) as u8;
-            teken_cirkel(
-                &mut self.scherm,
-                zx,
-                zy,
-                ar,
-                '·',
-                Color::Rgb { r: 255, g: a, b: 0 },
-                false,
-                uh,
-            );
+        for ar in (zon_r + 1)..=(zon_r + 2) {
+            teken_cirkel(&mut self.scherm, zx, zy, ar, '.',
+                         Color::Rgb { r: 120, g: 80, b: 0 }, false, uh);
         }
-        teken_cirkel(
-            &mut self.scherm,
-            zx,
-            zy,
-            zon_r,
-            '☀',
-            Color::Rgb {
-                r: 255,
-                g: 230,
-                b: 60,
-            },
-            true,
-            uh,
-        );
+        teken_cirkel(&mut self.scherm, zx, zy, zon_r, 'O',
+                     Color::Rgb { r: 255, g: 220, b: 60 }, true, uh);
         for (i, ch) in "Zon".chars().enumerate() {
-            self.scherm.zet(
-                zx as i64 - 1 + i as i64,
-                zy as i64 + zon_r + 1,
-                ch,
-                Color::Rgb {
-                    r: 255,
-                    g: 230,
-                    b: 100,
-                },
-                true,
-            );
+            self.scherm.zet(zx as i64 - 1 + i as i64, zy as i64 + zon_r + 1,
+                            ch, Color::Rgb { r: 200, g: 180, b: 60 }, false);
         }
 
-        // Planeten
+        // more planet stuff
         for def in PLANETEN {
             let (bx, by, bz) = planeet_3d(def, self.sim_dagen);
-            let (sx, sy, _) = projecteer(
-                bx,
-                by,
-                bz,
-                self.yaw,
-                self.pitch,
-                sc,
-                self.scroll_x,
-                self.scroll_y,
-                cx,
-                cy,
-            );
+            let (sx, sy, _)  = projecteer(bx, by, bz,
+                                           self.yaw, self.pitch, sc,
+                                           self.scroll_x, self.scroll_y, cx, cy);
             let r = straal_cellen(def.straal_km, sc);
-            if r >= 1 {
-                let gc = match def.kleur {
-                    Color::Rgb { r, g, b } => Color::Rgb {
-                        r: r / 2,
-                        g: g / 2,
-                        b: b / 2,
-                    },
-                    o => o,
-                };
-                teken_cirkel(&mut self.scherm, sx, sy, r + 1, '·', gc, false, uh);
-            }
-            teken_cirkel(&mut self.scherm, sx, sy, r, def.glyph, def.kleur, true, uh);
-            let lx = sx as i64 + r + 1;
-            let ly = sy as i64;
-            if ly >= 0 && ly < uh {
+            teken_cirkel(&mut self.scherm, sx, sy, r, def.glyph, def.kleur, false, uh);
+        }
+
+        // legenda
+        if self.toon_legenda {
+            let lx = 2i64;
+            let mut ly = 2i64;
+            self.scherm.zet(lx, ly, 'L', Color::Rgb{r:180,g:180,b:200}, true);
+            self.scherm.zet(lx+1, ly, 'e', Color::Rgb{r:180,g:180,b:200}, true);
+            self.scherm.zet(lx+2, ly, 'g', Color::Rgb{r:180,g:180,b:200}, true);
+            self.scherm.zet(lx+3, ly, 'e', Color::Rgb{r:180,g:180,b:200}, true);
+            self.scherm.zet(lx+4, ly, 'n', Color::Rgb{r:180,g:180,b:200}, true);
+            self.scherm.zet(lx+5, ly, 'd', Color::Rgb{r:180,g:180,b:200}, true);
+            self.scherm.zet(lx+6, ly, 'a', Color::Rgb{r:180,g:180,b:200}, true);
+            ly += 1;
+            self.scherm.zet(lx, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
+            self.scherm.zet(lx+1, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
+            self.scherm.zet(lx+2, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
+            self.scherm.zet(lx+3, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
+            self.scherm.zet(lx+4, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
+            self.scherm.zet(lx+5, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
+            self.scherm.zet(lx+6, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
+            ly += 1;
+            // the sun is a deadly laser
+            self.scherm.zet(lx, ly, 'O', Color::Rgb{r:255,g:220,b:60}, true);
+            self.scherm.zet(lx+2, ly, 'Z', Color::Rgb{r:200,g:180,b:80}, false);
+            self.scherm.zet(lx+3, ly, 'o', Color::Rgb{r:200,g:180,b:80}, false);
+            self.scherm.zet(lx+4, ly, 'n', Color::Rgb{r:200,g:180,b:80}, false);
+            ly += 1;
+            for def in PLANETEN {
+                self.scherm.zet(lx, ly, def.glyph, def.kleur, false);
+                self.scherm.zet(lx+1, ly, ' ', Color::Reset, false);
                 for (i, ch) in def.naam.chars().enumerate() {
-                    self.scherm.zet(lx + i as i64, ly, ch, def.kleur, false);
+                    self.scherm.zet(lx + 2 + i as i64, ly, ch, def.kleur, false);
                 }
+                ly += 1;
+                if ly >= uh { break; }
             }
         }
 
-        // UI spul
+        // ui
         let bar_y = uh as i64;
 
-        // Scheiding
         for x in 0..w {
-            let f = x as f64 / w as f64;
-            let r = (30.0 + f * 40.0) as u8;
-            let b = (50.0 + f * 30.0) as u8;
-            self.scherm
-                .zet(x as i64, bar_y, '▄', Color::Rgb { r, g: 30, b }, false);
+            self.scherm.zet(x as i64, bar_y, '-', Color::Rgb { r: 140, g: 140, b: 140 }, false);
         }
 
-        // Snelheidsknopjes
+        // speed
         let snelheden: &[(f64, &str)] = &[
-            (1.0, " 1× echt "),
-            (365.25, " 1jr/s "),
-            (3652.5, " 10jr/s "),
+            (1.0,     " 1x echt "),
+            (365.25,  " 1jr/s "),
+            (3652.5,  " 10jr/s "),
             (36525.0, " 100jr/s "),
         ];
         let mut bx = 1i64;
         for (mult, label) in snelheden {
             let actief = (self.snelheid - mult).abs() < 0.01;
             let kleur = if actief {
-                Color::Rgb {
-                    r: 255,
-                    g: 215,
-                    b: 60,
-                }
+                Color::Rgb { r: 255, g: 215, b: 60 }
             } else {
-                Color::Rgb {
-                    r: 110,
-                    g: 110,
-                    b: 140,
-                }
+                Color::Rgb { r: 100, g: 100, b: 120 }
             };
+            if actief {
+                self.scherm.zet(bx - 1, bar_y + 1, '[', Color::Rgb { r: 255, g: 215, b: 60 }, true);
+            }
             for (i, ch) in label.chars().enumerate() {
                 self.scherm.zet(bx + i as i64, bar_y + 1, ch, kleur, actief);
             }
             if actief {
-                self.scherm.zet(
-                    bx - 1,
-                    bar_y + 1,
-                    '[',
-                    Color::Rgb {
-                        r: 255,
-                        g: 215,
-                        b: 60,
-                    },
-                    true,
-                );
-                self.scherm.zet(
-                    bx + label.len() as i64,
-                    bar_y + 1,
-                    ']',
-                    Color::Rgb {
-                        r: 255,
-                        g: 215,
-                        b: 60,
-                    },
-                    true,
-                );
+                self.scherm.zet(bx + label.len() as i64, bar_y + 1, ']',
+                                Color::Rgb { r: 255, g: 215, b: 60 }, true);
             }
             bx += label.len() as i64 + 1;
         }
 
-        // Pauze
+        // pauze
         let (pl, pc) = if self.gepauzeerd {
-            (
-                "GEPAUZEERD",
-                Color::Rgb {
-                    r: 255,
-                    g: 215,
-                    b: 0,
-                },
-            )
+            ("  GEPAUZEERD", Color::Rgb { r: 220, g: 180, b: 0 })
         } else {
-            (
-                "ACTIEF",
-                Color::Rgb {
-                    r: 80,
-                    g: 220,
-                    b: 120,
-                },
-            )
+            ("  actief    ", Color::Rgb { r: 80, g: 180, b: 80 })
         };
         for (i, ch) in pl.chars().enumerate() {
             self.scherm.zet(bx + i as i64, bar_y + 1, ch, pc, false);
         }
 
-        // Klok
+        // klok
         let jaren = self.sim_dagen / 365.25;
         let klok = if jaren < 2.0 {
-            format!("Dag {:.1}", self.sim_dagen)
+            format!("dag {:.0}", self.sim_dagen)
         } else {
-            format!("Jaar {:.2}", jaren)
+            format!("jaar {:.1}", jaren)
         };
         let kx = (w as i64 - klok.len() as i64 - 2).max(0);
         for (i, ch) in klok.chars().enumerate() {
-            self.scherm.zet(
-                kx + i as i64,
-                bar_y + 1,
-                ch,
-                Color::Rgb {
-                    r: 110,
-                    g: 120,
-                    b: 150,
-                },
-                false,
-            );
+            self.scherm.zet(kx + i as i64, bar_y + 1, ch,
+                            Color::Rgb { r: 100, g: 110, b: 130 }, false);
         }
 
-        // Info-rij
-        let info = format!(
-            " Zoom:{:.1}×  Draai:{:.0}°  Helling:{:.0}°",
-            self.zoom,
-            self.yaw.to_degrees(),
-            self.pitch.to_degrees()
-        );
+        // infootjes
+        let info = format!(" zoom:{:.1}x  draai:{:.0}  helling:{:.0}",
+                           self.zoom,
+                           self.yaw.to_degrees().rem_euclid(360.0),
+                           { let p = self.pitch.to_degrees().rem_euclid(360.0); if p > 180.0 { p - 360.0 } else { p } });
         for (i, ch) in info.chars().enumerate() {
-            self.scherm.zet(
-                i as i64,
-                bar_y + 2,
-                ch,
-                Color::Rgb {
-                    r: 70,
-                    g: 90,
-                    b: 120,
-                },
-                false,
-            );
+            self.scherm.zet(i as i64, bar_y + 2, ch, Color::Rgb { r: 65, g: 80, b: 105 }, false);
         }
 
-        // Help
+        // HEEEELLLPPPP!!!!! HEEEEEEEEEELLLLLLPPPPPPPP!!!!!!!!!
         let help = if self.toon_help {
-            " WASD:pannen  ←→:draaien  ↑↓:kantelen  +:zoom-in  -:zoom-uit  1-4:snelheid  Spatie:pauze  0:reset  H:help  Q:sluiten"
+            " WASD:pannen  pijltjes:draaien/kantelen  +/-:zoom  1-4:snelheid  spatie:pauze  0:reset  L:legenda  H:help  Q:sluiten"
         } else {
             " H:hulp  Q:sluiten"
         };
-        for (i, ch) in help.chars().enumerate() {
-            if i + 1 >= w {
-                break;
-            }
-            self.scherm.zet(
-                i as i64,
-                bar_y + 3,
-                ch,
-                Color::Rgb {
-                    r: 60,
-                    g: 65,
-                    b: 90,
-                },
-                false,
-            );
+        for (i, ch) in help.chars().take(w - 1).enumerate() {
+            self.scherm.zet(i as i64, bar_y + 3, ch, Color::Rgb { r: 60, g: 65, b: 85 }, false);
         }
 
         self.scherm.flush(out)
     }
 
-    fn resize(&mut self, w: u16, h: u16) {
-        self.scherm.resize(w, h);
-    }
+    fn resize(&mut self, w: u16, h: u16) { self.scherm.resize(w, h); }
 }
 
 fn main() -> io::Result<()> {
@@ -883,12 +498,7 @@ fn main() -> io::Result<()> {
     let mut out = BufWriter::with_capacity(1 << 18, stdout_raw.lock());
 
     terminal::enable_raw_mode()?;
-    execute!(
-        out,
-        terminal::EnterAlternateScreen,
-        cursor::Hide,
-        terminal::DisableLineWrap
-    )?;
+    execute!(out, terminal::EnterAlternateScreen, cursor::Hide, terminal::DisableLineWrap)?;
 
     let mut app = App::nieuw()?;
     let tick = Duration::from_millis(33);
@@ -900,18 +510,13 @@ fn main() -> io::Result<()> {
         let deadline = Instant::now() + tick;
         loop {
             let now = Instant::now();
-            if now >= deadline {
-                break;
-            }
+            if now >= deadline { break; }
             if event::poll(deadline - now)? {
                 match event::read()? {
                     Event::Key(k) => {
-                        // Alleen reageren op Press (en Repeat voor key-herhaling)
                         use crossterm::event::KeyEventKind;
                         if k.kind == KeyEventKind::Press || k.kind == KeyEventKind::Repeat {
-                            if !app.toets(k) {
-                                break 'hoofd;
-                            }
+                            if !app.toets(k) { break 'hoofd; }
                         }
                     }
                     Event::Resize(w, h) => {
@@ -924,12 +529,8 @@ fn main() -> io::Result<()> {
         }
     }
 
-    execute!(
-        out,
-        terminal::LeaveAlternateScreen,
-        cursor::Show,
-        terminal::EnableLineWrap
-    )?;
+    execute!(out, terminal::LeaveAlternateScreen, cursor::Show, terminal::EnableLineWrap)?;
     terminal::disable_raw_mode()?;
     Ok(())
+}
 }
