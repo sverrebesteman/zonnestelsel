@@ -12,6 +12,7 @@ use std::time::{Duration, Instant};
 const BASE_SCALE: f64 = 4.0;
 const CHAR_ASPECT: f64 = 0.5;
 
+// ── Planeten ─────────────────────────────────────────────────────────────────
 struct PlaneetDef {
     naam:           &'static str,
     grote_as_au:    f64,
@@ -34,9 +35,60 @@ static PLANETEN: &[PlaneetDef] = &[
     PlaneetDef { naam:"Neptunus",  grote_as_au:30.069, excentriciteit:0.010, omloop_dagen:60_182.00,  straal_km:24_764.0, glyph:'o', kleur:Color::Rgb{r:80,g:120,b:230},  begin_hoek:2.8 },
 ];
 
+// ── Dwergplaneten ─────────────────────────────────────────────────────────────
+struct DwergPlaneetDef {
+    naam:           &'static str,
+    grote_as_au:    f64,
+    excentriciteit: f64,
+    omloop_dagen:   f64,
+    kleur:          Color,
+    begin_hoek:     f64,
+}
+
+static DWERGPLANETEN: &[DwergPlaneetDef] = &[
+    DwergPlaneetDef { naam:"Ceres",    grote_as_au:2.767,  excentriciteit:0.076, omloop_dagen:1_681.63,  kleur:Color::Rgb{r:160,g:150,b:140}, begin_hoek:1.3 },
+    DwergPlaneetDef { naam:"Pluto",    grote_as_au:39.482, excentriciteit:0.249, omloop_dagen:90_560.0,  kleur:Color::Rgb{r:210,g:180,b:140}, begin_hoek:3.7 },
+    DwergPlaneetDef { naam:"Eris",     grote_as_au:67.864, excentriciteit:0.436, omloop_dagen:204_199.0, kleur:Color::Rgb{r:200,g:200,b:200}, begin_hoek:0.6 },
+    DwergPlaneetDef { naam:"Makemake", grote_as_au:45.430, excentriciteit:0.159, omloop_dagen:111_690.0, kleur:Color::Rgb{r:220,g:160,b:110}, begin_hoek:5.1 },
+    DwergPlaneetDef { naam:"Haumea",   grote_as_au:43.335, excentriciteit:0.191, omloop_dagen:103_774.0, kleur:Color::Rgb{r:200,g:210,b:220}, begin_hoek:2.2 },
+];
+
+// ── Manen ─────────────────────────────────────────────────────────────────────
+// baan om de planeet in AU, omloop in dagen
+struct MaanDef {
+    naam:            &'static str,
+    planeet_idx:     usize,   // index in PLANETEN
+    baan_au:         f64,     // straal van de baan om de planeet
+    omloop_dagen:    f64,
+    kleur:           Color,
+    begin_hoek:      f64,
+}
+
+static MANEN: &[MaanDef] = &[
+    // Aarde (idx 2)
+    MaanDef { naam:"Maan",     planeet_idx:2, baan_au:0.00257, omloop_dagen:27.32,  kleur:Color::Rgb{r:180,g:180,b:180}, begin_hoek:0.0 },
+    // Mars (idx 3)
+    MaanDef { naam:"Phobos",   planeet_idx:3, baan_au:0.0000627, omloop_dagen:0.319, kleur:Color::Rgb{r:150,g:120,b:100}, begin_hoek:1.0 },
+    MaanDef { naam:"Deimos",   planeet_idx:3, baan_au:0.000157,  omloop_dagen:1.263, kleur:Color::Rgb{r:140,g:115,b:95},  begin_hoek:3.0 },
+    // Jupiter (idx 4)
+    MaanDef { naam:"Io",       planeet_idx:4, baan_au:0.002819, omloop_dagen:1.769,  kleur:Color::Rgb{r:230,g:200,b:80},  begin_hoek:0.5 },
+    MaanDef { naam:"Europa",   planeet_idx:4, baan_au:0.004486, omloop_dagen:3.551,  kleur:Color::Rgb{r:200,g:170,b:130}, begin_hoek:2.0 },
+    MaanDef { naam:"Ganymede", planeet_idx:4, baan_au:0.007155, omloop_dagen:7.155,  kleur:Color::Rgb{r:160,g:150,b:130}, begin_hoek:4.0 },
+    MaanDef { naam:"Callisto", planeet_idx:4, baan_au:0.012585, omloop_dagen:16.69,  kleur:Color::Rgb{r:120,g:110,b:100}, begin_hoek:1.5 },
+    // Saturnus (idx 5)
+    MaanDef { naam:"Titan",    planeet_idx:5, baan_au:0.008168, omloop_dagen:15.945, kleur:Color::Rgb{r:220,g:180,b:100}, begin_hoek:0.8 },
+    MaanDef { naam:"Enceladus",planeet_idx:5, baan_au:0.001590, omloop_dagen:1.370,  kleur:Color::Rgb{r:230,g:240,b:255}, begin_hoek:2.5 },
+    MaanDef { naam:"Rhea",     planeet_idx:5, baan_au:0.003524, omloop_dagen:4.518,  kleur:Color::Rgb{r:190,g:180,b:170}, begin_hoek:4.2 },
+    // Uranus (idx 6)
+    MaanDef { naam:"Titania",  planeet_idx:6, baan_au:0.002917, omloop_dagen:8.706,  kleur:Color::Rgb{r:140,g:170,b:180}, begin_hoek:1.1 },
+    MaanDef { naam:"Oberon",   planeet_idx:6, baan_au:0.003903, omloop_dagen:13.46,  kleur:Color::Rgb{r:130,g:155,b:165}, begin_hoek:3.3 },
+    // Neptunus (idx 7)
+    MaanDef { naam:"Triton",   planeet_idx:7, baan_au:0.002371, omloop_dagen:5.877,  kleur:Color::Rgb{r:100,g:140,b:200}, begin_hoek:2.8 },
+];
+
 const ZON_STRAAL_KM: f64 = 696_000.0;
 
-// Dubbele buffer
+// ── Dubbele buffer ────────────────────────────────────────────────────────────
 #[derive(Clone, PartialEq)]
 struct Cel { teken: char, fg: Color, vet: bool }
 impl Default for Cel {
@@ -99,7 +151,7 @@ impl Scherm {
     }
 }
 
-// Wiskunde
+// ── Wiskunde ──────────────────────────────────────────────────────────────────
 fn excentrieke_anomalie(ma: f64, e: f64) -> f64 {
     let mut ea = ma;
     for _ in 0..60 {
@@ -110,19 +162,38 @@ fn excentrieke_anomalie(ma: f64, e: f64) -> f64 {
     ea
 }
 
-fn planeet_3d(def: &PlaneetDef, sim_dagen: f64) -> (f64, f64, f64) {
+// positie van een lichaam op een Kepleriaanse baan, geeft (x,y) in AU
+fn baan_positie(grote_as: f64, exc: f64, periode: f64, begin_hoek: f64, sim_dagen: f64) -> (f64, f64) {
     use std::f64::consts::PI;
-    let mm = 2.0 * PI / def.omloop_dagen;
-    let ma = (mm * sim_dagen + def.begin_hoek).rem_euclid(2.0 * PI);
-    let ea = excentrieke_anomalie(ma, def.excentriciteit);
-    // atan2 vermijdt de tan-singulariteit bij ea=PI
+    let mm = 2.0 * PI / periode;
+    let ma = (mm * sim_dagen + begin_hoek).rem_euclid(2.0 * PI);
+    let ea = excentrieke_anomalie(ma, exc);
     let ta = 2.0 * f64::atan2(
-        ((1.0 + def.excentriciteit).sqrt()) * (ea / 2.0).sin(),
-        ((1.0 - def.excentriciteit).sqrt()) * (ea / 2.0).cos(),
+        ((1.0 + exc).sqrt()) * (ea / 2.0).sin(),
+        ((1.0 - exc).sqrt()) * (ea / 2.0).cos(),
     );
-    let r = def.grote_as_au * (1.0 - def.excentriciteit.powi(2))
-            / (1.0 + def.excentriciteit * ta.cos());
-    (r * ta.cos(), r * ta.sin(), 0.0)
+    let r = grote_as * (1.0 - exc.powi(2)) / (1.0 + exc * ta.cos());
+    (r * ta.cos(), r * ta.sin())
+}
+
+fn planeet_3d(def: &PlaneetDef, sim_dagen: f64) -> (f64, f64, f64) {
+    let (x, y) = baan_positie(def.grote_as_au, def.excentriciteit, def.omloop_dagen, def.begin_hoek, sim_dagen);
+    (x, y, 0.0)
+}
+
+fn dwerg_3d(def: &DwergPlaneetDef, sim_dagen: f64) -> (f64, f64, f64) {
+    let (x, y) = baan_positie(def.grote_as_au, def.excentriciteit, def.omloop_dagen, def.begin_hoek, sim_dagen);
+    (x, y, 0.0)
+}
+
+// maan-positie = planeet-positie + baan om de planeet
+fn maan_3d(maan: &MaanDef, sim_dagen: f64) -> (f64, f64, f64) {
+    let planeet = &PLANETEN[maan.planeet_idx];
+    let (px, py) = baan_positie(planeet.grote_as_au, planeet.excentriciteit,
+                                 planeet.omloop_dagen, planeet.begin_hoek, sim_dagen);
+    // maan heeft een cirkelvormige baan (excentriciteit ≈ 0 voor de grote manen)
+    let (mx, my) = baan_positie(maan.baan_au, 0.0, maan.omloop_dagen, maan.begin_hoek, sim_dagen);
+    (px + mx, py + my, 0.0)
 }
 
 fn projecteer(
@@ -132,12 +203,10 @@ fn projecteer(
     scroll_x: f64, scroll_y: f64,
     cx: f64, cy: f64,
 ) -> (f64, f64, f64) {
-    // yaw om de Z-as
     let (sy, cy2) = yaw.sin_cos();
     let rx1 =  wx * cy2 + wy * sy;
     let ry1 = -wx * sy  + wy * cy2;
     let rz1 =  wz;
-    // pitch om de X-as
     let (sp, cp) = pitch.sin_cos();
     let rx2 = rx1;
     let ry2 = ry1 * cp - rz1 * sp;
@@ -155,7 +224,7 @@ fn straal_cellen(straal_km: f64, schaal: f64) -> i64 {
     ((basis * (schaal / BASE_SCALE).sqrt()).round() as i64).max(0)
 }
 
-// tekenhulpen
+// ── Tekenhulpen ───────────────────────────────────────────────────────────────
 fn teken_cirkel(
     scherm: &mut Scherm,
     cx: f64, cy: f64, radius: i64,
@@ -174,19 +243,20 @@ fn teken_cirkel(
 }
 
 fn teken_baan(
-    scherm: &mut Scherm, def: &PlaneetDef,
+    scherm: &mut Scherm,
+    grote_as: f64, exc: f64,
     yaw: f64, pitch: f64, schaal: f64,
     scroll_x: f64, scroll_y: f64,
     cx: f64, cy: f64, usable_h: i64,
     zon_sx: f64, zon_sy: f64, zon_r: i64,
+    kleur: Color,
 ) {
     use std::f64::consts::PI;
-    let a  = def.grote_as_au;
-    let b  = a * (1.0 - def.excentriciteit.powi(2)).sqrt();
-    let fc = a * def.excentriciteit;
+    let a  = grote_as;
+    let b  = a * (1.0 - exc.powi(2)).sqrt();
+    let fc = a * exc;
     let stappen = ((a * schaal * 2.0 * PI) as usize).clamp(120, 2000);
     let skip = (stappen / 600 + 1).max(1);
-    // straal van het zondisc op scherm
     let skip_r = (zon_r + 1) as f64;
     for i in (0..stappen).step_by(skip) {
         let theta = 2.0 * PI * i as f64 / stappen as f64;
@@ -195,16 +265,67 @@ fn teken_baan(
             yaw, pitch, schaal, scroll_x, scroll_y, cx, cy,
         );
         if sy >= 0.0 && sy < usable_h as f64 {
-            // sla dots over die binnen de zon vallen
             let dx = (sx - zon_sx) * 0.5;
             let dy = sy - zon_sy;
             if dx * dx + dy * dy < skip_r * skip_r { continue; }
-            scherm.zet(sx as i64, sy as i64, '.', Color::Rgb { r: 140, g: 140, b: 140 }, false);
+            scherm.zet(sx as i64, sy as i64, '.', kleur, false);
         }
     }
 }
 
-// Sterren
+// asteroïdengordel — stochastische stipjes tussen 2.2 en 3.2 AU
+fn teken_asteroiden(
+    scherm: &mut Scherm,
+    yaw: f64, pitch: f64, schaal: f64,
+    scroll_x: f64, scroll_y: f64,
+    cx: f64, cy: f64, usable_h: i64,
+    zon_sx: f64, zon_sy: f64, zon_r: i64,
+) {
+    use std::f64::consts::PI;
+    let skip_r = (zon_r + 1) as f64;
+    // 300 willekeurige asteroïden, vaste seed
+    for i in 0usize..300 {
+        let h1 = i.wrapping_mul(2246822519).wrapping_add(1013904223) as u64;
+        let h2 = i.wrapping_mul(2654435761).wrapping_add(22695477) as u64;
+        let au = 2.2 + ((h1 & 0xFFFF) as f64 / 65535.0) * 1.0; // 2.2–3.2 AU
+        let theta = ((h2 & 0xFFFF) as f64 / 65535.0) * 2.0 * PI;
+        let wx = au * theta.cos();
+        let wy = au * theta.sin();
+        let (sx, sy, _) = projecteer(wx, wy, 0.0, yaw, pitch, schaal,
+                                      scroll_x, scroll_y, cx, cy);
+        if sy >= 0.0 && sy < usable_h as f64 {
+            let dx = (sx - zon_sx) * 0.5;
+            let dy = sy - zon_sy;
+            if dx * dx + dy * dy < skip_r * skip_r { continue; }
+            scherm.zet(sx as i64, sy as i64, ',', Color::Rgb { r: 90, g: 80, b: 70 }, false);
+        }
+    }
+}
+
+// Kuipergordel — 2.0 AU breed van 30 tot 50 AU
+fn teken_kuipergordel(
+    scherm: &mut Scherm,
+    yaw: f64, pitch: f64, schaal: f64,
+    scroll_x: f64, scroll_y: f64,
+    cx: f64, cy: f64, usable_h: i64,
+) {
+    use std::f64::consts::PI;
+    for i in 0usize..400 {
+        let h1 = i.wrapping_mul(1664525).wrapping_add(1013904223) as u64;
+        let h2 = i.wrapping_mul(69069).wrapping_add(12345) as u64;
+        let au = 30.0 + ((h1 & 0xFFFF) as f64 / 65535.0) * 20.0;
+        let theta = ((h2 & 0xFFFF) as f64 / 65535.0) * 2.0 * PI;
+        let wx = au * theta.cos();
+        let wy = au * theta.sin();
+        let (sx, sy, _) = projecteer(wx, wy, 0.0, yaw, pitch, schaal,
+                                      scroll_x, scroll_y, cx, cy);
+        if sy >= 0.0 && sy < usable_h as f64 {
+            scherm.zet(sx as i64, sy as i64, '.', Color::Rgb { r: 50, g: 55, b: 70 }, false);
+        }
+    }
+}
+
+// ── Sterren ───────────────────────────────────────────────────────────────────
 struct Ster { x: f64, y: f64, helderheid: u8 }
 
 fn genereer_sterren(n: usize) -> Vec<Ster> {
@@ -243,37 +364,39 @@ fn teken_sterren(
     }
 }
 
-// application schtuff 
+// ── Applicatie ────────────────────────────────────────────────────────────────
 struct App {
-    scherm:     Scherm,
-    scroll_x:   f64,
-    scroll_y:   f64,
-    zoom:       f64,
-    yaw:        f64,
-    pitch:      f64,
-    snelheid:   f64,
-    last_tick:  Instant,
-    sim_dagen:  f64,
-    toon_help:   bool,
+    scherm:       Scherm,
+    scroll_x:     f64,
+    scroll_y:     f64,
+    zoom:         f64,
+    yaw:          f64,
+    pitch:        f64,
+    snelheid:     f64,
+    last_tick:    Instant,
+    sim_dagen:    f64,
+    toon_help:    bool,
     toon_legenda: bool,
-    gepauzeerd:  bool,
-    sterren:    Vec<Ster>,
+    toon_manen:   bool,
+    gepauzeerd:   bool,
+    sterren:      Vec<Ster>,
 }
 
 impl App {
     fn nieuw() -> io::Result<Self> {
         let (w, h) = terminal::size()?;
         Ok(App {
-            scherm:     Scherm::nieuw(w, h),
-            scroll_x:   0.0, scroll_y: 0.0,
-            zoom:       1.0, yaw: 0.0, pitch: 0.0,
-            snelheid:   1.0,
-            last_tick:  Instant::now(),
-            sim_dagen:  0.0,
-            toon_help:   true,
+            scherm:       Scherm::nieuw(w, h),
+            scroll_x:     0.0, scroll_y: 0.0,
+            zoom:         1.0, yaw: 0.0, pitch: 0.0,
+            snelheid:     1.0,
+            last_tick:    Instant::now(),
+            sim_dagen:    0.0,
+            toon_help:    true,
             toon_legenda: true,
-            gepauzeerd:  false,
-            sterren:    genereer_sterren(900),
+            toon_manen:   true,
+            gepauzeerd:   false,
+            sterren:      genereer_sterren(900),
         })
     }
 
@@ -284,10 +407,10 @@ impl App {
     }
 
     fn toets(&mut self, key: KeyEvent) -> bool {
-        let schaal       = BASE_SCALE * self.zoom;
-        let pan_stap     = schaal * 0.4;
-        let rot_stap     = 0.05_f64;
-        let zoom_factor  = 1.15_f64;
+        let schaal      = BASE_SCALE * self.zoom;
+        let pan_stap    = schaal * 0.4;
+        let rot_stap    = 0.05_f64;
+        let zoom_factor = 1.15_f64;
 
         match key.code {
             KeyCode::Char('q') | KeyCode::Char('Q') => return false,
@@ -298,7 +421,6 @@ impl App {
             KeyCode::Char('w') | KeyCode::Char('W') => self.scroll_y -= pan_stap * CHAR_ASPECT,
             KeyCode::Char('s') | KeyCode::Char('S') => self.scroll_y += pan_stap * CHAR_ASPECT,
 
-            // pijltjes draaien — pitch vrij, geen clamp
             KeyCode::Left  => self.yaw   = (self.yaw   - rot_stap).rem_euclid(std::f64::consts::TAU),
             KeyCode::Right => self.yaw   = (self.yaw   + rot_stap).rem_euclid(std::f64::consts::TAU),
             KeyCode::Up    => self.pitch = (self.pitch - rot_stap).rem_euclid(std::f64::consts::TAU),
@@ -313,8 +435,9 @@ impl App {
             KeyCode::Char('4') => self.snelheid = 36525.0,
 
             KeyCode::Char(' ') => self.gepauzeerd = !self.gepauzeerd,
-            KeyCode::Char('h') | KeyCode::Char('H') => self.toon_help = !self.toon_help,
+            KeyCode::Char('h') | KeyCode::Char('H') => self.toon_help    = !self.toon_help,
             KeyCode::Char('l') | KeyCode::Char('L') => self.toon_legenda = !self.toon_legenda,
+            KeyCode::Char('m') | KeyCode::Char('M') => self.toon_manen   = !self.toon_manen,
             KeyCode::Char('0') => {
                 self.scroll_x = 0.0; self.scroll_y = 0.0;
                 self.yaw = 0.0;      self.pitch = 0.0;
@@ -340,18 +463,41 @@ impl App {
                       self.scroll_x, self.scroll_y,
                       self.yaw, self.pitch, cx, cy, uh);
 
+        // zon positie vooraf berekenen zodat banen hem kunnen vermijden
         let zon_r = straal_cellen(ZON_STRAAL_KM, sc).max(2);
         let (zx, zy, _) = projecteer(0.0, 0.0, 0.0,
                                       self.yaw, self.pitch, sc,
                                       self.scroll_x, self.scroll_y, cx, cy);
 
+        // kuipergordel eerst (achterste laag)
+        teken_kuipergordel(&mut self.scherm, self.yaw, self.pitch, sc,
+                            self.scroll_x, self.scroll_y, cx, cy, uh);
+
+        // asteroïdengordel
+        teken_asteroiden(&mut self.scherm, self.yaw, self.pitch, sc,
+                         self.scroll_x, self.scroll_y, cx, cy, uh, zx, zy, zon_r);
+
+        // planeetbanen
         for def in PLANETEN {
-            teken_baan(&mut self.scherm, def,
+            teken_baan(&mut self.scherm,
+                       def.grote_as_au, def.excentriciteit,
                        self.yaw, self.pitch, sc,
                        self.scroll_x, self.scroll_y, cx, cy, uh,
-                       zx, zy, zon_r);
+                       zx, zy, zon_r,
+                       Color::Rgb { r: 38, g: 38, b: 50 });
         }
 
+        // dwergplaneetbanen (gestippeld kleur)
+        for def in DWERGPLANETEN {
+            teken_baan(&mut self.scherm,
+                       def.grote_as_au, def.excentriciteit,
+                       self.yaw, self.pitch, sc,
+                       self.scroll_x, self.scroll_y, cx, cy, uh,
+                       zx, zy, zon_r,
+                       Color::Rgb { r: 55, g: 45, b: 60 });
+        }
+
+        // the sun is a deadly laser
         for ar in (zon_r + 1)..=(zon_r + 2) {
             teken_cirkel(&mut self.scherm, zx, zy, ar, '.',
                          Color::Rgb { r: 120, g: 80, b: 0 }, false, uh);
@@ -363,7 +509,7 @@ impl App {
                             ch, Color::Rgb { r: 200, g: 180, b: 60 }, false);
         }
 
-        // more planet stuff
+        // planeten
         for def in PLANETEN {
             let (bx, by, bz) = planeet_3d(def, self.sim_dagen);
             let (sx, sy, _)  = projecteer(bx, by, bz,
@@ -373,40 +519,84 @@ impl App {
             teken_cirkel(&mut self.scherm, sx, sy, r, def.glyph, def.kleur, false, uh);
         }
 
+        // dwergplaneten — altijd als punt
+        for def in DWERGPLANETEN {
+            let (bx, by, bz) = dwerg_3d(def, self.sim_dagen);
+            let (sx, sy, _)  = projecteer(bx, by, bz,
+                                           self.yaw, self.pitch, sc,
+                                           self.scroll_x, self.scroll_y, cx, cy);
+            if sy >= 0.0 && sy < uh as f64 {
+                self.scherm.zet(sx as i64, sy as i64, '*', def.kleur, false);
+            }
+        }
+
+        // manen
+        if self.toon_manen {
+            for maan in MANEN {
+                let (mx, my, mz) = maan_3d(maan, self.sim_dagen);
+                let (sx, sy, _)  = projecteer(mx, my, mz,
+                                               self.yaw, self.pitch, sc,
+                                               self.scroll_x, self.scroll_y, cx, cy);
+                if sy >= 0.0 && sy < uh as f64 {
+                    self.scherm.zet(sx as i64, sy as i64, '.', maan.kleur, false);
+                }
+            }
+        }
+
         // legenda
         if self.toon_legenda {
             let lx = 2i64;
             let mut ly = 2i64;
-            self.scherm.zet(lx, ly, 'L', Color::Rgb{r:180,g:180,b:200}, true);
-            self.scherm.zet(lx+1, ly, 'e', Color::Rgb{r:180,g:180,b:200}, true);
-            self.scherm.zet(lx+2, ly, 'g', Color::Rgb{r:180,g:180,b:200}, true);
-            self.scherm.zet(lx+3, ly, 'e', Color::Rgb{r:180,g:180,b:200}, true);
-            self.scherm.zet(lx+4, ly, 'n', Color::Rgb{r:180,g:180,b:200}, true);
-            self.scherm.zet(lx+5, ly, 'd', Color::Rgb{r:180,g:180,b:200}, true);
-            self.scherm.zet(lx+6, ly, 'a', Color::Rgb{r:180,g:180,b:200}, true);
+
+            let titel = "Legenda";
+            for (i, ch) in titel.chars().enumerate() {
+                self.scherm.zet(lx + i as i64, ly, ch, Color::Rgb{r:180,g:180,b:200}, true);
+            }
             ly += 1;
-            self.scherm.zet(lx, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
-            self.scherm.zet(lx+1, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
-            self.scherm.zet(lx+2, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
-            self.scherm.zet(lx+3, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
-            self.scherm.zet(lx+4, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
-            self.scherm.zet(lx+5, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
-            self.scherm.zet(lx+6, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
+            for i in 0..7 {
+                self.scherm.zet(lx + i, ly, '-', Color::Rgb{r:60,g:60,b:75}, false);
+            }
             ly += 1;
-            // the sun is a deadly laser
+
+            // zon
             self.scherm.zet(lx, ly, 'O', Color::Rgb{r:255,g:220,b:60}, true);
-            self.scherm.zet(lx+2, ly, 'Z', Color::Rgb{r:200,g:180,b:80}, false);
-            self.scherm.zet(lx+3, ly, 'o', Color::Rgb{r:200,g:180,b:80}, false);
-            self.scherm.zet(lx+4, ly, 'n', Color::Rgb{r:200,g:180,b:80}, false);
+            for (i, ch) in " Zon".chars().enumerate() {
+                self.scherm.zet(lx + 1 + i as i64, ly, ch, Color::Rgb{r:200,g:180,b:80}, false);
+            }
             ly += 1;
+
+            // planeten
             for def in PLANETEN {
                 self.scherm.zet(lx, ly, def.glyph, def.kleur, false);
-                self.scherm.zet(lx+1, ly, ' ', Color::Reset, false);
-                for (i, ch) in def.naam.chars().enumerate() {
-                    self.scherm.zet(lx + 2 + i as i64, ly, ch, def.kleur, false);
+                for (i, ch) in format!(" {}", def.naam).chars().enumerate() {
+                    self.scherm.zet(lx + 1 + i as i64, ly, ch, def.kleur, false);
                 }
                 ly += 1;
                 if ly >= uh { break; }
+            }
+
+            // dwergplaneten
+            if ly + 2 < uh {
+                for (i, ch) in "Dwerg:".chars().enumerate() {
+                    self.scherm.zet(lx + i as i64, ly, ch, Color::Rgb{r:130,g:110,b:140}, false);
+                }
+                ly += 1;
+                for def in DWERGPLANETEN {
+                    self.scherm.zet(lx, ly, '*', def.kleur, false);
+                    for (i, ch) in format!(" {}", def.naam).chars().enumerate() {
+                        self.scherm.zet(lx + 1 + i as i64, ly, ch, def.kleur, false);
+                    }
+                    ly += 1;
+                    if ly >= uh { break; }
+                }
+            }
+
+            // manen toggle hint
+            if ly < uh {
+                let maan_hint = if self.toon_manen { "M: manen aan" } else { "M: manen uit" };
+                for (i, ch) in maan_hint.chars().enumerate() {
+                    self.scherm.zet(lx + i as i64, ly, ch, Color::Rgb{r:80,g:100,b:120}, false);
+                }
             }
         }
 
@@ -477,9 +667,9 @@ impl App {
             self.scherm.zet(i as i64, bar_y + 2, ch, Color::Rgb { r: 65, g: 80, b: 105 }, false);
         }
 
-        // HEEEELLLPPPP!!!!! HEEEEEEEEEELLLLLLPPPPPPPP!!!!!!!!!
+        // HEEEELLLPPPP!!!!! HEEEEEEEEEELLLLLLPPPPPPPP!!!!!!!!!!!
         let help = if self.toon_help {
-            " WASD:pannen  pijltjes:draaien/kantelen  +/-:zoom  1-4:snelheid  spatie:pauze  0:reset  L:legenda  H:help  Q:sluiten"
+            " WASD:pannen  pijltjes:draaien/kantelen  +/-:zoom  1-4:snelheid  spatie:pauze  0:reset  M:manen  L:legenda  H:help  Q:sluiten"
         } else {
             " H:hulp  Q:sluiten"
         };
