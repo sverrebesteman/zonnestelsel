@@ -12,7 +12,7 @@ use std::time::{Duration, Instant};
 const BASE_SCALE: f64 = 4.0;
 const CHAR_ASPECT: f64 = 0.5;
 
-// ── Planeten ─────────────────────────────────────────────────────────────────
+// Planeten
 struct PlaneetDef {
     naam:           &'static str,
     grote_as_au:    f64,
@@ -53,7 +53,7 @@ static DWERGPLANETEN: &[DwergPlaneetDef] = &[
     DwergPlaneetDef { naam:"Haumea",   grote_as_au:43.335, excentriciteit:0.191, omloop_dagen:103_774.0, kleur:Color::Rgb{r:200,g:210,b:220}, begin_hoek:2.2 },
 ];
 
-// ── Manen ─────────────────────────────────────────────────────────────────────
+// Manen
 // baan om de planeet in AU, omloop in dagen
 struct MaanDef {
     naam:            &'static str,
@@ -88,7 +88,7 @@ static MANEN: &[MaanDef] = &[
 
 const ZON_STRAAL_KM: f64 = 696_000.0;
 
-// ── Dubbele buffer ────────────────────────────────────────────────────────────
+// dubbele buffer
 #[derive(Clone, PartialEq)]
 struct Cel { teken: char, fg: Color, vet: bool }
 impl Default for Cel {
@@ -151,7 +151,7 @@ impl Scherm {
     }
 }
 
-// ── Wiskunde ──────────────────────────────────────────────────────────────────
+// wiskunde
 fn excentrieke_anomalie(ma: f64, e: f64) -> f64 {
     let mut ea = ma;
     for _ in 0..60 {
@@ -224,7 +224,7 @@ fn straal_cellen(straal_km: f64, schaal: f64) -> i64 {
     ((basis * (schaal / BASE_SCALE).sqrt()).round() as i64).max(0)
 }
 
-// ── Tekenhulpen ───────────────────────────────────────────────────────────────
+// tekenhulpies
 fn teken_cirkel(
     scherm: &mut Scherm,
     cx: f64, cy: f64, radius: i64,
@@ -273,7 +273,7 @@ fn teken_baan(
     }
 }
 
-// asteroïdengordel — stochastische stipjes tussen 2.2 en 3.2 AU
+// asteroidengordel — stochastische stipjes tussen 2.2 en 3.2 AU
 fn teken_asteroiden(
     scherm: &mut Scherm,
     yaw: f64, pitch: f64, schaal: f64,
@@ -283,7 +283,7 @@ fn teken_asteroiden(
 ) {
     use std::f64::consts::PI;
     let skip_r = (zon_r + 1) as f64;
-    // 300 willekeurige asteroïden, vaste seed
+    // 300 willekeurige asteroiden, vaste seed
     for i in 0usize..300 {
         let h1 = i.wrapping_mul(2246822519).wrapping_add(1013904223) as u64;
         let h2 = i.wrapping_mul(2654435761).wrapping_add(22695477) as u64;
@@ -302,7 +302,7 @@ fn teken_asteroiden(
     }
 }
 
-// Kuipergordel — 2.0 AU breed van 30 tot 50 AU
+// kuipergordel 2 AU breed van 30 tot 50 AU
 fn teken_kuipergordel(
     scherm: &mut Scherm,
     yaw: f64, pitch: f64, schaal: f64,
@@ -325,7 +325,7 @@ fn teken_kuipergordel(
     }
 }
 
-// ── Sterren ───────────────────────────────────────────────────────────────────
+// sterren
 struct Ster { x: f64, y: f64, helderheid: u8 }
 
 fn genereer_sterren(n: usize) -> Vec<Ster> {
@@ -364,7 +364,7 @@ fn teken_sterren(
     }
 }
 
-// ── Applicatie ────────────────────────────────────────────────────────────────
+// application
 struct App {
     scherm:       Scherm,
     scroll_x:     f64,
@@ -473,7 +473,7 @@ impl App {
         teken_kuipergordel(&mut self.scherm, self.yaw, self.pitch, sc,
                             self.scroll_x, self.scroll_y, cx, cy, uh);
 
-        // asteroïdengordel
+        // asteroidengordel
         teken_asteroiden(&mut self.scherm, self.yaw, self.pitch, sc,
                          self.scroll_x, self.scroll_y, cx, cy, uh, zx, zy, zon_r);
 
@@ -519,7 +519,7 @@ impl App {
             teken_cirkel(&mut self.scherm, sx, sy, r, def.glyph, def.kleur, false, uh);
         }
 
-        // dwergplaneten — altijd als punt
+        // dwergplaneten altijd als punt
         for def in DWERGPLANETEN {
             let (bx, by, bz) = dwerg_3d(def, self.sim_dagen);
             let (sx, sy, _)  = projecteer(bx, by, bz,
