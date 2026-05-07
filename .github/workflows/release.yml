@@ -5,17 +5,74 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+  build:
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-22.04
+          - target: x86_64-apple-darwin
+            os: macos-13
+          - target: aarch64-apple-darwin
+            os: macos-14
+          - target: x86_64-pc-windows-msvc
+            os: windows-2022
+    
+    runs-on: ${{ matrix.os }}
     
     steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      run: cargo build --release
-    - name: Create Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: target/release/zonnestelsel
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal
+      
+      - name: Build release
+        run: cargo build --release --locked --target ${{ matrix.target }}
+      
+      - name: Get binary name
+        id: binary
+        shell: bash
+        run: |
+          if [[ "${{ matrix.target }}" == *"windows"* ]]; then
+            echo "name=zonnestelsel.exe" >> $GITHUB_OUTPUT
+          else
+            echo "name=zonnestelsel" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Create archive
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          if [[ "${{ matrix.target }}" == *"windows"* ]]; then
+            ARCHIVE="zonnestelsel-${VERSION}-${{ matrix.target }}.zip"
+            7z a "$ARCHIVE" ./target/${{ matrix.target }}/release/${{ steps.binary.outputs.name }}
+          else
+            ARCHIVE="zonnestelsel-${VERSION}-${{ matrix.target }}.tar.gz"
+            tar -czf "$ARCHIVE" -C ./target/${{ matrix.target }}/release ${{ steps.binary.outputs.name }}
+          fi
+          echo "ARCHIVE=$ARCHIVE" >> $GITHUB_ENV
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.target }}
+          path: ${{ env.ARCHIVE }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-22.04
+    
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
