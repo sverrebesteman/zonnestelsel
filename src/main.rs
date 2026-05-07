@@ -504,10 +504,6 @@ impl App {
         }
         teken_cirkel(&mut self.scherm, zx, zy, zon_r, 'O',
                      Color::Rgb { r: 255, g: 220, b: 60 }, true, uh);
-        for (i, ch) in "Zon".chars().enumerate() {
-            self.scherm.zet(zx as i64 - 1 + i as i64, zy as i64 + zon_r + 1,
-                            ch, Color::Rgb { r: 200, g: 180, b: 60 }, false);
-        }
 
         // planeten
         for def in PLANETEN {
