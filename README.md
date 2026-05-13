@@ -1,5 +1,9 @@
 # Zonnestelsel
 
+### Showcase
+
+[![Watch the video](https://img.youtube.com/vi/d4i3iRh-FrI/maxresdefault.jpg)](https://www.youtube.com/watch?v=d4i3iRh-FrI)
+
 ### Build guide
 1. Open een terminal naar jouw keuze. Ik ben zeker dat dit werkt op Alacritty. Alleen macOS of Linux is echt ondersteund op dit moment. Er is geen Windows ondersteuning, ik heb het zelf geprobeerd en ik ben denk ik mentaal onstabiel geworden.
 2. `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh` om Rust te installeren op macOS of Linux.
