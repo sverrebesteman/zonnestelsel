@@ -2,6 +2,8 @@
 
 ### Showcase
 
+Tip: Je kunt klikken op de onderstaande foto om in realtime het project te zien.
+
 [![Watch the video](https://img.youtube.com/vi/d4i3iRh-FrI/maxresdefault.jpg)](https://www.youtube.com/watch?v=d4i3iRh-FrI)
 
 ### Build guide
